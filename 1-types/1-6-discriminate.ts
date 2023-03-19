@@ -1,10 +1,8 @@
 {
-    // Union Types: OR
-    // 발생할 수 있는 모든 케이스 중에 하나만 할당할 수 있을 때 쓰면 좋음
-    // 활용도 매우 높음.
+    // 차별화 할 수 있는 구별할 수 있는 이라는 뜻.
 
     type Direction = 'left' | 'right' | 'up' | 'down';
-    function move(direction: Direction) {
+    function move2(direction: Direction) {
         console.log(direction);
     }
     move('up');
@@ -15,35 +13,33 @@
     // function: login -> success, fail
 
     type SuccessState = {
+        result: 'success';
         response: {
             body: string;
         };
     };
 
     type FailState = {
+        result: 'fail';
         reason: string;
     };
 
     type LoginState = SuccessState | FailState
 
-    function login(id: string, password: number): LoginState {
+    function login2(id: string, password: number): LoginState {
         return {
+            result: 'success',
             response: {
                 body: 'logged in!',
             },
         };
     }
 
-    // printLoginState(state: LoginState)
-    // successs -> :)
-    // fail -> :(
-
-    function printLoginState(state: LoginState) {
-        if ('response' in state) {
+    function printLoginState2(state: LoginState) {
+        if (state.result === 'success') {
             console.log(`:) ${state.response.body}`)
         } else {
             console.log(`:( ${state.reason}`)
         }
     }
 }
-
