@@ -5,7 +5,7 @@
     function move2(direction: Direction) {
         console.log(direction);
     }
-    move('up');
+    move2('up');
 
     type TileSize = 8 | 16 | 32;
     const tile: TileSize = 16;
