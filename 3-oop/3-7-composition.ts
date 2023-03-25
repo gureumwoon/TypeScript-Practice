@@ -7,6 +7,13 @@
     // 그리고 제일 큰 문제점은, 타입스크립트에서는 한가지 이상의 부모클래스를 상속할 수가 없다.
     // 이런 상속의 문제점들 때문에 composition을 사용하는 것이 더 좋다.
 
+
+    // composition -> 구성요소들, 구성이라는 뜻을 의미한다. 우리가 레고를 만들 때 필요한 부품들을 모아서
+    // 조립 해나가는 것처럼 이 composition도 필요한 것들을 가져와서 조립 해나가는 것을 말한다.
+    // 코드의 재사용을 높여준다.
+
+    // composition의 단점 알아보자
+
     type CoffeeCup = {
         shots: number;
         hasMilk?: boolean;
@@ -68,40 +75,77 @@
 
     }
 
-    class CaffeLatteMachine extends CoffeeMachine {
-        constructor(beans: number, public readonly serialNumber: string) {
-            super(beans)
-        }
+
+    // 싸구려 우유 거품기
+    class CheapMilkSteamer {
         private steamMilk(): void {
             console.log('Steaming some milk...🥛')
         }
-        makeCoffee(shots: number): CoffeeCup {
-            const coffee = super.makeCoffee(shots);
+        makeMilk(cup: CoffeeCup): CoffeeCup {
             this.steamMilk();
             return {
-                ...coffee,
+                ...cup,
                 hasMilk: true,
             };
         }
     }
 
-    class SweetCoffeeMaker extends CoffeeMachine {
+    // 설탕 제조기
+    class AutomaticSugarMixer {
+        private getSugar() {
+            console.log('Getting some sugar from jar 🍭');
+            return true;
+        }
+        addSugar(cup: CoffeeCup): CoffeeCup {
+            const sugar = this.getSugar();
+            return {
+                ...cup,
+                hasSugar: sugar,
+            }
+        }
+    }
+
+    class CaffeLatteMachine extends CoffeeMachine {
+        constructor(beans: number,
+            public readonly serialNumber: string,
+            private milkFother: CheapMilkSteamer
+        ) {
+            super(beans)
+        }
         makeCoffee(shots: number): CoffeeCup {
             const coffee = super.makeCoffee(shots);
-            return {
-                ...coffee,
-                hasSugar: true,
-            };
+            return this.milkFother.makeMilk(coffee);
+        }
+    }
+
+    class SweetCoffeeMaker extends CoffeeMachine {
+        constructor(private beans: number, private sugar: AutomaticSugarMixer) {
+            super(beans);
+        };
+        makeCoffee(shots: number): CoffeeCup {
+            const coffee = super.makeCoffee(shots);
+            return this.sugar.addSugar(coffee);
+        }
+    }
+
+    class SweerCaffeeLatteMachine extends CoffeeMachine {
+        constructor(
+            private beans: number,
+            private milk: CheapMilkSteamer,
+            private sugar: AutomaticSugarMixer
+        ) {
+            super(beans);
+        }
+        makeCoffee(shots: number): CoffeeCup {
+            const coffee = super.makeCoffee(shots);
+            const sugaAdded = this.sugar.addSugar(coffee);
+            return this.milk.makeMilk(sugaAdded);
         }
     }
 
     const machines: CoffeeMaker[] = [
         new CoffeeMachine(16),
-        new CaffeLatteMachine(16, '1'),
-        new SweetCoffeeMaker(16),
         new CoffeeMachine(16),
-        new CaffeLatteMachine(16, '1'),
-        new SweetCoffeeMaker(16),
     ];
 
     machines.forEach(machine => {
