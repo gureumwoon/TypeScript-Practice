@@ -13,6 +13,9 @@
     // 코드의 재사용을 높여준다.
 
     // composition의 단점 알아보자
+    // 우리가 가져다 쓰는 class는 서로간에 너무 타이트하게 커플링이 되어져 있어서 하나의 class가
+    // 변경 되거나 또는 다른 것으로 대체하고 싶어도 서로 타이트하게 연결이 되어있기 때문에, 한가지만 
+    // 수정이 되면 이 class를 사용하는 모든 class들을 업데이트 해야하는 문제점이 있다.
 
     type CoffeeCup = {
         shots: number;
@@ -28,12 +31,12 @@
         private static BEANS_GRAMM_PER_SHOT: number = 7
         private coffeeBeans: number = 0;
 
-        constructor(coffeeBeans: number) {
+        constructor(
+            coffeeBeans: number,
+            private milk: MilkFrother,
+            private sugar: SugarProvider
+        ) {
             this.coffeeBeans = coffeeBeans;
-        }
-
-        static makeMachine(coffeeBeans: number): CoffeeMachine {
-            return new CoffeeMachine(coffeeBeans)
         }
 
         fillCoffeeBeans(beans: number) {
@@ -70,14 +73,23 @@
         makeCoffee(shots: number): CoffeeCup {
             this.grindBeans(shots);
             this.preheat();
-            return this.extract(shots);
+            const coffee = this.extract(shots);
+            const sugarAdded = this.sugar.addSugar(coffee);
+            return this.milk.makeMilk(sugarAdded)
         }
 
     }
 
+    interface MilkFrother {
+        makeMilk(cup: CoffeeCup): CoffeeCup;
+    }
+
+    interface SugarProvider {
+        addSugar(cup: CoffeeCup): CoffeeCup;
+    }
 
     // 싸구려 우유 거품기
-    class CheapMilkSteamer {
+    class CheapMilkSteamer implements MilkFrother {
         private steamMilk(): void {
             console.log('Steaming some milk...🥛')
         }
@@ -90,8 +102,54 @@
         }
     }
 
+    class FancyMilkSteamer implements MilkFrother {
+        private steamMilk(): void {
+            console.log('Fancy Steaming some milk...🥛')
+        }
+        makeMilk(cup: CoffeeCup): CoffeeCup {
+            this.steamMilk();
+            return {
+                ...cup,
+                hasMilk: true,
+            };
+        }
+    }
+
+    class ColdMilkSteamer implements MilkFrother {
+        private steamMilk(): void {
+            console.log('Fancy Steaming some milk...🥛')
+        }
+        makeMilk(cup: CoffeeCup): CoffeeCup {
+            this.steamMilk();
+            return {
+                ...cup,
+                hasMilk: true,
+            };
+        }
+    }
+
+    class NoMilk implements MilkFrother {
+        makeMilk(cup: CoffeeCup): CoffeeCup {
+            return cup;
+        }
+    }
+
     // 설탕 제조기
-    class AutomaticSugarMixer {
+    class CandySugarMixer implements SugarProvider {
+        private getSugar() {
+            console.log('Getting some sugar from candy 🍭');
+            return true;
+        }
+        addSugar(cup: CoffeeCup): CoffeeCup {
+            const sugar = this.getSugar();
+            return {
+                ...cup,
+                hasSugar: sugar,
+            }
+        }
+    }
+
+    class SugarMixer implements SugarProvider {
         private getSugar() {
             console.log('Getting some sugar from jar 🍭');
             return true;
@@ -105,52 +163,71 @@
         }
     }
 
-    class CaffeLatteMachine extends CoffeeMachine {
-        constructor(beans: number,
-            public readonly serialNumber: string,
-            private milkFother: CheapMilkSteamer
-        ) {
-            super(beans)
-        }
-        makeCoffee(shots: number): CoffeeCup {
-            const coffee = super.makeCoffee(shots);
-            return this.milkFother.makeMilk(coffee);
+    class NoSugar implements SugarProvider {
+        addSugar(cup: CoffeeCup): CoffeeCup {
+            return cup;
         }
     }
 
-    class SweetCoffeeMaker extends CoffeeMachine {
-        constructor(private beans: number, private sugar: AutomaticSugarMixer) {
-            super(beans);
-        };
-        makeCoffee(shots: number): CoffeeCup {
-            const coffee = super.makeCoffee(shots);
-            return this.sugar.addSugar(coffee);
-        }
-    }
+    // class CaffeLatteMachine extends CoffeeMachine {
+    //     constructor(
+    //         beans: number,
+    //         public readonly serialNumber: string,
+    //         private milkFrother: MilkFrother
+    //     ) {
+    //         super(beans)
+    //     }
+    //     makeCoffee(shots: number): CoffeeCup {
+    //         const coffee = super.makeCoffee(shots);
+    //         return this.milkFrother.makeMilk(coffee);
+    //     }
+    // }
 
-    class SweerCaffeeLatteMachine extends CoffeeMachine {
-        constructor(
-            private beans: number,
-            private milk: CheapMilkSteamer,
-            private sugar: AutomaticSugarMixer
-        ) {
-            super(beans);
-        }
-        makeCoffee(shots: number): CoffeeCup {
-            const coffee = super.makeCoffee(shots);
-            const sugaAdded = this.sugar.addSugar(coffee);
-            return this.milk.makeMilk(sugaAdded);
-        }
-    }
+    // class SweetCoffeeMaker extends CoffeeMachine {
+    //     constructor(private beans: number, private sugar: SugarProvider) {
+    //         super(beans);
+    //     };
+    //     makeCoffee(shots: number): CoffeeCup {
+    //         const coffee = super.makeCoffee(shots);
+    //         return this.sugar.addSugar(coffee);
+    //     }
+    // }
 
-    const machines: CoffeeMaker[] = [
-        new CoffeeMachine(16),
-        new CoffeeMachine(16),
-    ];
+    // class SweetCaffeLatteMachine extends CoffeeMachine {
+    //     constructor(
+    //         private beans: number,
+    //         private milk: MilkFrother,
+    //         private sugar: SugarProvider
+    //     ) {
+    //         super(beans);
+    //     }
+    //     makeCoffee(shots: number): CoffeeCup {
+    //         const coffee = super.makeCoffee(shots);
+    //         const sugaAdded = this.sugar.addSugar(coffee);
+    //         return this.milk.makeMilk(sugaAdded);
+    //     }
+    // }
 
-    machines.forEach(machine => {
-        console.log('----------------------');
-        machine.makeCoffee(1)
-    })
 
+    // Milk
+    const cheapMilkMaker = new CheapMilkSteamer();
+    const fancyMilkMaker = new FancyMilkSteamer();
+    const coldMilkMaker = new ColdMilkSteamer();
+    const noMilk = new NoMilk();
+
+    // Sugar
+    const candySugar = new CandySugarMixer();
+    const sugar = new SugarMixer();
+    const noSugar = new NoSugar();
+
+    // Machine
+    const sweetCandyMachine = new CoffeeMachine(12, noMilk, candySugar);
+    const sweetMachine = new CoffeeMachine(12, noMilk, sugar);
+    const latteMachine = new CoffeeMachine(12, cheapMilkMaker, noSugar);
+    const coldLatteMachine = new CoffeeMachine(12, coldMilkMaker, noSugar);
+    const sweetLatteMachine = new CoffeeMachine(12, cheapMilkMaker, candySugar);
+
+    // 이렇게 class들간에 의사소통이 발생하는 경우에는 class 자신을 노출하는 것이 아니라, 계약서를 통해서
+    // 계약서에 의거해서 의사소통을 해야한다. 여기서 계약서는 interface다. interface를 통해서 서로간에 의사소통
+    // 서로간에 상호작용을 하는 것이 더 좋다. 이것이 디커플링의 원칙이다.
 }
