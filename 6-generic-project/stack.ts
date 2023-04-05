@@ -3,11 +3,6 @@ interface Stack<T> {
     push(value: T): void;
     pop(): T;
 }
-interface Stack<T> {
-    readonly size: number;
-    push(value: T): void;
-    pop(): T;
-}
 
 type StackNode<T> = {
     readonly value: T;
