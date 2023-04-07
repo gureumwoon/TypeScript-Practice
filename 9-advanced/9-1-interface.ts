@@ -68,3 +68,10 @@ type Name = Person['name']; // string
 type NumberType = number;
 type Direction = 'left' | 'right';
 
+// 어떤 특정한 규격을 정의하는 것이라면, 그리고 이 규격을 통해서
+// 어떤 것이 구현 된다 interface를 쓰는 것이 더 정확하다.
+
+// type은 우리가 어떠한 데이터를 담을 때 어떠한 데이터를 담을 수 있을
+// 데이터의 모습 데이터의 타입 결정하는 것이다.
+// 어떠한 것을 구현할 목적으로 만드는 것이 아니라 데이터를 담을 목적으로
+// 만든다 interface 보다는 type을 쓰는 것이 조금 더 좋다.
