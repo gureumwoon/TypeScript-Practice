@@ -1,0 +1,94 @@
+:root {
+    --bg-main-color: #00000080;
+    --bg-accent-color: #2d2d2d;
+    --accent-color: #f64435;
+    --text-accent-color: #ffe498;
+    --text-edit-bg-color: #575757;
+    --border-color: #3f3f3f;
+    --shadow-color: #202020;
+    --document-bg-color: #68686850;
+    --component-bg-gradient: radial-gradient(circle, #646464e6 0%, #363636e6 100%);
+    --smokywhite: #dddbd8;
+    --black: #000000;
+    --translucent-black: #00000099;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+p {
+    color: var(--smokywhite);
+}
+
+button {
+    cursor: pointer;
+}
+
+body {
+    background: url("../assets/background.png") center/cover no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    overflow: hidden;
+}
+
+
+.app {
+    width: 100%;
+    max-width: 1000px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.banner {
+    height: 120px;
+    background-color: var(--bg-main-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    border-bottom: 1px solid var(--bg-accent-color);
+}
+
+.banner h1 {
+    color: var(--accent-color);
+}
+
+.btn-list {
+    /* width: 50%; */
+    display: flex;
+    justify-content: center;
+}
+
+.btn-item {
+    background-color: var(--accent-color);
+    width: 79px;
+    height: 29px;
+    border-color: var(--accent-color);
+    margin: 0 4px;
+    border-radius: 2px;
+    color: white;
+    font-weight: bold;
+}
+
+.document {
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--document-bg-color);
+}
+
+.footer {
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-main-color);
+    text-align: center;
+}
