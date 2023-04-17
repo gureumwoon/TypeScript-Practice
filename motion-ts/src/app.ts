@@ -1,10 +1,10 @@
-import { PageComponent } from "./components/page.js"
+import { PageComponent } from "./components/page/page.js"
 
 class App {
-    private readonly element: PageComponent;
+    private readonly page: PageComponent;
     constructor(appRoot: HTMLElement) {
-        this.element = new PageComponent();
-        this.element.attachTo(appRoot)
+        this.page = new PageComponent();
+        this.page.attachTo(appRoot)
     }
 }
 
