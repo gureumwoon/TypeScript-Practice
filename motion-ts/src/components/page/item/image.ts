@@ -8,11 +8,11 @@ export class ImageComponent {
     </section>`;
         this.element = template.content.firstElementChild! as HTMLElement;
 
-        const imageElement = this.element.querySelector('image-thumbnail')! as HTMLImageElement;
+        const imageElement = this.element.querySelector('.image-thumbnail')! as HTMLImageElement;
         imageElement.src = url;
         imageElement.alt = title;
 
-        const titleElement = this.element.querySelector('image-title')! as HTMLParagraphElement;
+        const titleElement = this.element.querySelector('.image-title')! as HTMLParagraphElement;
         titleElement.textContent = title;
     }
     attachTo(parent: HTMLElement, position: InsertPosition = "afterbegin") {
