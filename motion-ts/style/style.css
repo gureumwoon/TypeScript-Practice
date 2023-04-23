@@ -84,6 +84,8 @@ body {
 .document {
     height: 100vh;
     overflow-y: auto;
+    scrollbar-color: var(--bg-accent-color);
+    scrollbar-face-color: var(--accent-color);
     background-color: var(--document-bg-color);
 }
 
