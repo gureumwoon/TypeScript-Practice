@@ -8,66 +8,28 @@ import { VideoComponent } from "./components/page/item/video.js";
 import { PageComponent, PageItemComponent } from "./components/page/page.js";
 class App {
     constructor(appRoot, dialogRoot) {
+        this.dialogRoot = dialogRoot;
         this.page = new PageComponent(PageItemComponent);
         this.page.attachTo(appRoot);
-        const imageBtn = document.querySelector('#btn-image');
-        imageBtn.addEventListener('click', () => {
+        this.bindElementToDialog('#btn-image', MediaSectionInput, (input) => new ImageComponent(input.title, input.url));
+        this.bindElementToDialog('#btn-video', MediaSectionInput, (input) => new VideoComponent(input.title, input.url));
+        this.bindElementToDialog('#btn-note', TextSectionInput, (input) => new NoteComponent(input.title, input.body));
+        this.bindElementToDialog('#btn-task', TextSectionInput, (input) => new TodoComponent(input.title, input.body));
+    }
+    bindElementToDialog(selector, Inputcomponent, makeSection) {
+        const element = document.querySelector(selector);
+        element.addEventListener('click', () => {
             const dialog = new InputDialog();
-            const mediaInputSection = new MediaSectionInput();
-            dialog.addChild(mediaInputSection);
-            dialog.attachTo(dialogRoot);
+            const input = new Inputcomponent();
+            dialog.addChild(input);
+            dialog.attachTo(this.dialogRoot);
             dialog.setOnCloseListener(() => {
-                dialog.removeFrom(dialogRoot);
+                dialog.removeFrom(this.dialogRoot);
             });
             dialog.setOnSubmitListener(() => {
-                const image = new ImageComponent(mediaInputSection.title, mediaInputSection.url);
+                const image = makeSection(input);
                 this.page.addChild(image);
-                dialog.removeFrom(dialogRoot);
-            });
-        });
-        const videoBtn = document.querySelector('#btn-video');
-        videoBtn.addEventListener('click', () => {
-            const dialog = new InputDialog();
-            const mediaInputSection = new MediaSectionInput();
-            dialog.addChild(mediaInputSection);
-            dialog.attachTo(dialogRoot);
-            dialog.setOnCloseListener(() => {
-                dialog.removeFrom(dialogRoot);
-            });
-            dialog.setOnSubmitListener(() => {
-                const video = new VideoComponent(mediaInputSection.title, mediaInputSection.url);
-                this.page.addChild(video);
-                dialog.removeFrom(dialogRoot);
-            });
-        });
-        const noteBtn = document.querySelector('#btn-note');
-        noteBtn.addEventListener('click', () => {
-            const dialog = new InputDialog();
-            const textInputSection = new TextSectionInput();
-            dialog.addChild(textInputSection);
-            dialog.attachTo(dialogRoot);
-            dialog.setOnCloseListener(() => {
-                dialog.removeFrom(dialogRoot);
-            });
-            dialog.setOnSubmitListener(() => {
-                const note = new NoteComponent(textInputSection.title, textInputSection.body);
-                this.page.addChild(note);
-                dialog.removeFrom(dialogRoot);
-            });
-        });
-        const todoBtn = document.querySelector('#btn-task');
-        todoBtn.addEventListener('click', () => {
-            const dialog = new InputDialog();
-            const textInputSection = new TextSectionInput();
-            dialog.addChild(textInputSection);
-            dialog.attachTo(dialogRoot);
-            dialog.setOnCloseListener(() => {
-                dialog.removeFrom(dialogRoot);
-            });
-            dialog.setOnSubmitListener(() => {
-                const todo = new TodoComponent(textInputSection.title, textInputSection.body);
-                this.page.addChild(todo);
-                dialog.removeFrom(dialogRoot);
+                dialog.removeFrom(this.dialogRoot);
             });
         });
     }
