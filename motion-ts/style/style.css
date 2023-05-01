@@ -15,12 +15,11 @@
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 li {
     list-style: none;
+    padding-left: 0;
 }
 
 p {
@@ -29,6 +28,16 @@ p {
 
 button {
     cursor: pointer;
+    background: transparent;
+    border: 0;
+    outline: 0;
+}
+
+input,
+textarea {
+    background-color: var(--text-edit-bg-color);
+    color: var(--smokywhite);
+    font-size: 1.5em;
 }
 
 body {
@@ -36,8 +45,8 @@ body {
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
     margin: 0;
+    font-size: 1.25rem;
     overflow: hidden;
 }
 
@@ -49,7 +58,6 @@ dialog {
     border: 0;
 }
 
-
 .app {
     width: 100%;
     max-width: 1000px;
@@ -59,42 +67,44 @@ dialog {
 }
 
 .banner {
-    height: 120px;
     background-color: var(--bg-main-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+    text-align: center;
     border-bottom: 1px solid var(--bg-accent-color);
 }
 
-.banner h1 {
+.banner-title {
+    margin: 20px;
     color: var(--accent-color);
 }
 
 .btn-list {
     /* width: 50%; */
     display: flex;
+    align-items: center;
     justify-content: center;
 }
 
 .btn-item {
     background-color: var(--accent-color);
-    width: 79px;
-    height: 29px;
+    margin: 0.1em 0.2em;
+    text-align: center;
+    user-select: none;
+    padding: 1em 3em;
     border-color: var(--accent-color);
     margin: 0 4px;
     border-radius: 2px;
     color: white;
-    font-weight: bold;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .document {
     height: 100vh;
     overflow-y: auto;
+    background-color: var(--document-bg-color);
+    scrollbar-width: 6px;
     scrollbar-color: var(--bg-accent-color);
     scrollbar-face-color: var(--accent-color);
-    background-color: var(--document-bg-color);
 }
 
 .footer {
@@ -128,8 +138,98 @@ dialog {
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     box-shadow: 2px 2px 20px var(--shadow-color);
-    -webkit-border-radius: 0.5rem;
-    -moz-border-radius: 0.5rem;
-    -ms-border-radius: 0.5rem;
-    -o-border-radius: 0.5rem;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+}
+
+.close {
+    align-self: flex-end;
+    font-size: 28px;
+    color: var(--accent-color);
+    font-weight: bold;
+    padding: 0.2rem;
+    margin: 3px;
+    transition: color 250ms ease;
+}
+
+.close:hover,
+.close:focus {
+    transform: scale(1.5);
+    color: var(--shadow-color);
+    text-decoration: none;
+}
+
+.dialog-submit {
+    align-self: flex-end;
+    padding: 0.5em 1.5em;
+}
+
+/*-- Page Item --*/
+
+.page-item {
+    margin: 1.5em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 2px 2px 6px var(--shadow-color);
+    background: var(--bg-accent-color);
+    background: var(--component-bg-gradient);
+}
+
+.page-item__body {
+    width: 100%;
+}
+
+.page-item__controls {
+    padding-right: 0.5em;
+}
+
+.page-item__title {
+    color: var(--text-accent-color);
+}
+
+/*-- Image & Video --*/
+
+.image,
+.video {
+    display: flex;
+    height: 250px;
+}
+
+.image-holder,
+.video-holder {
+    flex: 60% 1 1;
+}
+
+.image-title,
+.video-title {
+    flex: 40% 1 1;
+    margin-left: 0.5em;
+}
+
+.video-thumbnail {
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.image-thumbnail {
+    width: 100%;
+    height: 100%;
+}
+
+/*-- TODO --*/
+
+.todo,
+.note {
+    padding: 0.5em;
+}
+
+.todo-label {
+    padding: 1em;
+    color: var(--smokywhite);
 }
